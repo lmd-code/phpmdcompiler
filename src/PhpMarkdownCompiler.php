@@ -3,7 +3,7 @@
 /**
  * PHP Markdown Compiler
  * (c) LMD, 2022
- * https://github.com/lmd-code/phpmarkdowncompiler
+ * https://github.com/lmd-code/phpmdcompiler
  *
  * @version 0.0.1
  * @license MIT
@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace lmdcode\phpmdcomp;
+namespace lmdcode\phpmdcompiler;
 
 /**
  * Compiler Markdown

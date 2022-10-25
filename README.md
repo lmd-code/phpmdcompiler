@@ -49,7 +49,7 @@ The rest of the document…
 
 You need to have at least PHP 7.4 installed on your system.
 
-1. Download and unzip the repository to a location of your choice.
+1. Download and unzip the `phpmdcompiler` repository to a location of your choice.
 2. In the command line tool of you choice, navigate to the folder you just downloaded/unzipped.
 3. At the command prompt, enter `php bin/mdcompile` and follow the instructions on screen.
 

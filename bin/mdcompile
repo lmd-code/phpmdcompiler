@@ -4,14 +4,14 @@
 /**
  * PHP Markdown Compiler
  * (c) LMD, 2022
- * https://github.com/lmd-code/phpmarkdowncompiler
+ * https://github.com/lmd-code/phpmdcompiler
  *
  * Command line compiler.
  */
 
 declare(strict_types=1);
 
-namespace lmdcode\phpmdcomp;
+namespace lmdcode\phpmdcompiler;
 
 if (PHP_SAPI !== 'cli') {
     die("Script may only be run on the command line.");

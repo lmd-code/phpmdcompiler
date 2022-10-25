@@ -3,7 +3,7 @@
 /**
  * PHP Markdown Compiler
  * (c) LMD, 2022
- * https://github.com/lmd-code/phpmarkdowncompiler
+ * https://github.com/lmd-code/phpmdcompiler
  *
  * Basic server-side script example.
  *
@@ -12,10 +12,10 @@
  * 1. Rename this file to 'example.php' (it's just a file extension change).
  *
  * 2. In your browser, go to:
- *    http://host.name/path/to/phpmarkdowncompiler/demo/example.php
+ *    http://host.name/path/to/phpmdcompiler/demo/example.php
  *
  *    For example, in a dev environment:
- *    http://project.locahost/phpmarkdowncompiler/demo/example.php
+ *    http://project.locahost/phpmdcompiler/demo/example.php
  */
 
 declare(strict_types=1);
@@ -42,7 +42,7 @@ if ($compile) {
      */
     try {
         // Initialise the class
-        $mdcompiler = new \lmdcode\phpmdcomp\PhpMarkdownCompiler(
+        $mdcompiler = new \lmdcode\phpmdcompiler\PhpMarkdownCompiler(
             '$root/demo/md/index.md',
             '$root/demo/md/demo-compiled.md',
         );
