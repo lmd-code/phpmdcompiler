@@ -1,5 +1,5 @@
 # Force language identification
-bin/compile linguist-language=PHP
+bin/mdcompile linguist-language=PHP
 
 # Exclude from export
 .github        export-ignore
