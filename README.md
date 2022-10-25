@@ -1,8 +1,8 @@
-# PHP Mardown Compiler
+# PHP Markdown Compiler
 
-Compile multiple Markdown (`*.md`) documents into a single file using a special *file include* Markdown syntax.
+Compile multiple Markdown (`*.md`) files into a single document using a special *file include* Markdown syntax.
 
-Optionally include a Table of Contents generated from the headers in the compiled file.
+Optionally include a Table of Contents generated from the headers in the compiled document.
 
 **NB:** This is not a *parser*, it will not convert Markdown content into another markup syntax.
 
@@ -49,9 +49,9 @@ The rest of the document…
 
 You need to have at least PHP 7.4 installed on your system.
 
-1. Download and unzip the repo to a location of your choice.
+1. Download and unzip the repository to a location of your choice.
 2. In the command line tool of you choice, navigate to the folder you just downloaded/unzipped.
-3. Then at the prompt, enter `php bin/mdcompile` and follow the instructions on screen.
+3. At the command prompt, enter `php bin/mdcompile` and follow the instructions on screen.
 
 ### Compiler Options
 
