@@ -1,0 +1,139 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * PHP Markdown Compiler
+ * (c) LMD, 2022
+ * https://github.com/lmd-code/phpmarkdowncompiler
+ *
+ * Command line compiler.
+ */
+
+declare(strict_types=1);
+
+namespace lmdcode\phpmdcomp;
+
+if (PHP_SAPI !== 'cli') {
+    die("Script may only be run on the command line.");
+}
+
+require_once dirname(__DIR__) . '/src/PhpMarkdownCompiler.php';
+
+$title = "PHP MARKDOWN COMPILER v" . PhpMarkdownCompiler::VERSION . " (c) LMD, 2022";
+$div = "*******************************************************************************";
+$NL = PHP_EOL;
+$xNL = $NL . $NL; // two line space
+$options = ["Y", "N"];
+$prompt = ">";
+
+// Instructions
+
+echo $div . $NL . "*" . str_pad($title, 77, " ", STR_PAD_BOTH) . "*" . $NL . $div . $xNL;
+
+// Initialise the class
+$mdcompiler = new PhpMarkdownCompiler();
+
+// Get Input File
+do {
+    $errors = 0; // keep count of user input errors
+
+    try {
+        echo "PATH TO INPUT FILE..." . $NL
+        . "- Enter the absolute file system path, including '.md' file extension." . $NL;
+        $mdcompiler->setInput(readline(">"));
+    } catch (\Exception $e) {
+        $errors++;
+        fwrite(STDERR, $e->getMessage() . $NL);
+    }
+} while ($errors > 0);
+
+echo $NL;
+
+// Get Output File
+do {
+    $errors = 0; // keep count of user input errors
+
+    try {
+        echo "PATH TO OUTPUT FILE..." . $NL
+        . "- Enter the absolute file system path, including '.md' file extension." . $NL
+        . "- The output directory must exist, but the file will be created if necessary." . $NL;
+        $mdcompiler->setOutput(readline($prompt));
+
+        // Check that the source and output are not the same file
+        if ($mdcompiler->getInputFilePath() === $mdcompiler->getOutputFilePath()) {
+            throw new \Exception(
+                "The output file must not be identical to the input file!" . $NL
+                . "INPUT FILE:  " . $mdcompiler->getInputFilePath() . $NL
+                . "OUTPUT FILE: " . $mdcompiler->getOutputFilePath()
+            );
+        }
+    } catch (\Exception $e) {
+        $errors++;
+        fwrite(STDERR, $e->getMessage() . $NL);
+    }
+} while ($errors > 0);
+
+echo $NL;
+
+// Adjust headings
+do {
+    echo "ADJUST HEADINGS? [Y/N]" . $NL;
+    $doHeadings = strtoupper(trim(readline($prompt)));
+} while (!in_array($doHeadings, $options));
+
+echo $NL;
+
+// Table of Contents
+do {
+    echo "INSERT TABLE OF CONTENTS? [Y/N]" . $NL;
+    $doToc = strtoupper(trim(readline($prompt)));
+} while (!in_array($doToc, $options));
+
+echo $NL;
+
+// Start compile process
+echo "READING FROM: " . $mdcompiler->getInputFilePath() . $xNL;
+
+$output = $mdcompiler->runCompiler($doHeadings === 'Y', $doToc === 'Y');
+
+echo "CONTENTS COMPILED..." . $xNL;
+
+// Show output in consle
+do {
+    echo "SHOW OUTPUT IN CONSOLE? [Y/N]" . $NL;
+    $doTest = strtoupper(trim(readline($prompt)));
+} while (!in_array($doTest, $options));
+
+echo $NL;
+
+if ($doTest === 'Y') {
+    echo "***** START OUTPUT *****" . $xNL . $output . $xNL . "***** END OUTPUT *****" . $xNL;
+
+    // Save/create output file
+    do {
+        echo "SAVE/CREATE OUTPUT FILE? [Y/N]" . $NL;
+        $doWrite = strtoupper(trim(readline($prompt)));
+    } while (!in_array($doWrite, $options));
+
+    echo $NL;
+} else {
+    $doWrite = 'Y'; // if not viewing output first, automatially save/create output file
+}
+
+if ($doWrite === 'Y') {    
+    echo "WRITING TO: " . $mdcompiler->getOutputFilePath();
+
+    try {
+        $mdcompiler->saveFile();
+        echo " - SUCCESS";
+    } catch (\Exception $e) {
+        echo " - ERROR" . $NL;
+        fwrite(STDERR, $e->getMessage());
+    }
+
+    echo $xNL;
+}
+
+echo "***** END COMPILER *****" . $xNL;
+
+exit(0);

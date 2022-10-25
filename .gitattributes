@@ -1,0 +1,23 @@
+# Force language identification
+bin/compile linguist-language=PHP
+
+# Exclude from export
+.github        export-ignore
+.gitattributes export-ignore
+.gitignore     export-ignore
+.gitkeep       export-ignore
+*.xml          export-ignore
+
+# Exclude from diffs
+.github        linguist-generated
+.gitattributes linguist-generated
+.gitignore     linguist-generated
+.gitkeep       linguist-generated
+demo/*         linguist-generated
+CHANGELOG.md   linguist-generated
+*.xml          linguist-generated
+
+# Exclude from language stats
+demo/* linguist-vendored
+*.md   linguist-vendored
+*.xml  linguist-vendored
