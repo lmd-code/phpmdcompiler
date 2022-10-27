@@ -11,8 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Refactored/improved various bits of code
-- Heading level adjustments now work properly
-- Namespace and references to `phpmdcompiler` repo dir name.
+- Heading level adjustments now correct
+- Existing heading IDs/anchors no longer overwritten
+- Generated heading IDs/anchors now based on heading text (alphanumeric ascii chars only, plus dashes)
+- Fixed incorrect namespace and references to the `phpmdcompiler` repo dir name.
 
 ### Added
 
