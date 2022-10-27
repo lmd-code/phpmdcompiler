@@ -26,6 +26,9 @@ $xNL = $NL . $NL; // two line space
 $options = ["Y", "N"];
 $prompt = ">";
 
+$inputFilePath = '';
+$outputFilePath = '';
+
 // Instructions
 
 echo $div . $NL . "*" . str_pad($title, 77, " ", STR_PAD_BOTH) . "*" . $NL . $div . $xNL;
@@ -40,7 +43,7 @@ do {
     try {
         echo "PATH TO INPUT FILE..." . $NL
         . "- Enter the absolute file system path, including '.md' file extension." . $NL;
-        $mdcompiler->setInput(readline(">"));
+        $inputFilePath = $mdcompiler->setInputFile(readline(">"));
     } catch (\Exception $e) {
         $errors++;
         fwrite(STDERR, $e->getMessage() . $NL);
@@ -57,14 +60,13 @@ do {
         echo "PATH TO OUTPUT FILE..." . $NL
         . "- Enter the absolute file system path, including '.md' file extension." . $NL
         . "- The output directory must exist, but the file will be created if necessary." . $NL;
-        $mdcompiler->setOutput(readline($prompt));
+        $outputFilePath = $mdcompiler->setOutputFile(readline($prompt));
 
         // Check that the source and output are not the same file
-        if ($mdcompiler->getInputFilePath() === $mdcompiler->getOutputFilePath()) {
+        if ($inputFilePath === $outputFilePath) {
             throw new \Exception(
                 "The output file must not be identical to the input file!" . $NL
-                . "INPUT FILE:  " . $mdcompiler->getInputFilePath() . $NL
-                . "OUTPUT FILE: " . $mdcompiler->getOutputFilePath()
+                . "INPUT FILE:  " . $inputFilePath . $NL . "OUTPUT FILE: " . $outputFilePath
             );
         }
     } catch (\Exception $e) {
@@ -92,7 +94,7 @@ do {
 echo $NL;
 
 // Start compile process
-echo "READING FROM: " . $mdcompiler->getInputFilePath() . $xNL;
+echo "READING FROM: " . $inputFilePath . $xNL;
 
 $output = $mdcompiler->runCompiler($doHeadings === 'Y', $doToc === 'Y');
 
@@ -121,7 +123,7 @@ if ($doTest === 'Y') {
 }
 
 if ($doWrite === 'Y') {    
-    echo "WRITING TO: " . $mdcompiler->getOutputFilePath();
+    echo "WRITING TO: " . $outputFilePath;
 
     try {
         $mdcompiler->saveFile();
