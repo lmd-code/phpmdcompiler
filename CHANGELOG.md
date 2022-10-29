@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.0.3] - 2022-10-29
+
+### Fixed
+
+- Issue where the main document heading was being removed when the Table of Contents was inserted immediately after it.
+- Issue where more than one Table of Contents would be inserted, now only the first occurance of the '`toc`' Markdown syntax will be replaced.
+- Various issues with the regex for finding/replacing the Markdown syntax for file includes and Table of Contents and parsing headings.
+
+### Changed
+
+- The `runCompiler()` method now no longer stores the raw compiled document (before any Table of Contents is inserted) as a class property.
+
+### Removed
+
+- Removed the `getOutput()` method and `$mdOut` property.
+
 ## [0.0.2] - 2022-10-27
 
 ### Fixed
@@ -26,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Initial commit.
 
-[Unreleased]: https://github.com/lmd-code/phpmdcompiler/compare/v0.0.2...HEAD
+[Unreleased]: https://github.com/lmd-code/phpmdcompiler/compare/v0.0.3...HEAD
+[0.0.3]: https://github.com/lmd-code/phpmdcompiler/releases/tag/v0.0.3
 [0.0.2]: https://github.com/lmd-code/phpmdcompiler/releases/tag/v0.0.2
 [0.0.1]: https://github.com/lmd-code/phpmdcompiler/releases/tag/v0.0.1

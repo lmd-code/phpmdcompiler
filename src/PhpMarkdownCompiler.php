@@ -5,7 +5,7 @@
  * (c) LMD, 2022
  * https://github.com/lmd-code/phpmdcompiler
  *
- * @version 0.0.2
+ * @version 0.0.3
  * @license MIT
  */
 
@@ -21,7 +21,7 @@ class PhpMarkdownCompiler
     /**
      * Version number
      */
-    public const VERSION = '0.0.2';
+    public const VERSION = '0.0.3';
 
     /**
      * Absolute path to source input folder
@@ -66,13 +66,6 @@ class PhpMarkdownCompiler
     private $insertToc = false;
 
     /**
-     * Compiled output Markdown
-     *
-     * @var string
-     */
-    private $mdOut;
-
-    /**
      * Table of Contents Markdown
      * @var string
      */
@@ -92,16 +85,22 @@ class PhpMarkdownCompiler
     private static $ROOT_PATH;
 
     /**
+     * Regex to match file include syntax
+     * @var string
+     */
+    private static $re_inc_syntax = '/^(?<inc>:\[(?<text>[^\]]+?)\]\((?<file>[^\) ]+?)\)\h*?)$/ms';
+
+    /**
      * Regex to match Table of Contents Markdown token syntax
      * @var string
      */
-    private static $regex_toc_syntax = '/\n+```toc(\s*?)```\n+/is';
+    private static $re_toc_syntax = '/\n+```toc(\s*?)```\n+/is';
 
     /**
      * Regex to match the parts of a heading (level, text and optional ID)
      * @var string
      */
-    private static $regex_heading = '/^(?<level>#+)\s*?(?<text>[^{]+?)\s*?(\{(?<id>[^}]+)\})?$/';
+    private static $re_heading = '/^(?<level>#+)\s*?(?<text>[^{]+?)\s*?(\{(?<id>[^}]+)\})?$/';
 
     /**
      * Constructor
@@ -212,16 +211,6 @@ class PhpMarkdownCompiler
     }
 
     /**
-     * Get compiled output Markdown
-     *
-     * @return string
-     */
-    public function getOutput(): string
-    {
-        return $this->mdOut;
-    }
-
-    /**
      * Get Table of Contents Markdown
      *
      * @return string
@@ -269,21 +258,21 @@ class PhpMarkdownCompiler
         // Get/prepare compiled output
         $compiledOutput = $this->compile($this->inputFile);
 
-        // Store compiled output without Table of Contents (remove any 'toc' Markdown token)
-        $this->mdOut = preg_replace(self::$regex_toc_syntax, "\n\n", $compiledOutput);
-
         // Generate and store Table of Contents (even if not inserted)
         $this->mdToc = self::generateTableOfContents($compiledOutput);
 
-        $this->isCompiled = true; // flag as compiled
-
         if ($insertToc) {
             // Return with Table of Contents inserted
-            return $this->insertTableOfContents($compiledOutput);
+            $compiledOutput = $this->insertTableOfContents($compiledOutput);
         }
 
+        // Remove any remaining 'toc' Markdown tokens
+        $compiledOutput = preg_replace(self::$re_toc_syntax, "\n\n", $compiledOutput);
+
+        $this->isCompiled = true; // flag as compiled
+
         // Return without Table of Contents inserted
-        return $this->mdOut;
+        return $compiledOutput;
     }
 
     /**
@@ -313,14 +302,8 @@ class PhpMarkdownCompiler
         );
 
         // Find includes
-        if (
-            !preg_match_all(
-                '/(?<inc>:\[(?<text>[^\]]+?)\]\((?<file>[^\) ]+?)\)\h*?)/s',
-                $src,
-                $foundIncs,
-                PREG_SET_ORDER
-            )
-        ) {
+        $haveIncs = preg_match_all(self::$re_inc_syntax, $src, $foundIncs, PREG_SET_ORDER);
+        if (!$haveIncs || $haveIncs === 0) {
             return trim($src); // if there are no includes return the original source
         }
 
@@ -367,8 +350,11 @@ class PhpMarkdownCompiler
     {
         preg_match_all('/^(?<hs>#+ [^\n]+)\n?/im', $content, $findHeadings);
 
-        foreach ($findHeadings['hs'] as $key => $heading) {
-            preg_match(self::$regex_heading, trim($heading), $matches);
+        foreach ($findHeadings['hs'] as $heading) {
+            $haveHeading = preg_match(self::$re_heading, trim($heading), $matches);
+            if ($haveHeading !== 1) {
+                continue; // skip if heading format doesn't match
+            }
 
             $level = intval(strlen($matches['level'])); // current heading level
             $htext = trim($matches['text']); // heading text
@@ -405,6 +391,8 @@ class PhpMarkdownCompiler
      * Will either insert where there is a `toc` Markdown token, or if there is no token,
      * it will insert after the main heading.
      *
+     * Where token exists, it will only insert into the first occurance it finds.
+     *
      * @param string $content Markdown content
      *
      * @return string
@@ -413,13 +401,13 @@ class PhpMarkdownCompiler
     {
         $toc = "\n\n" . $this->mdToc . "\n\n";
 
-        if (preg_match(self::$regex_toc_syntax, $content)) {
-            // Insert at 'toc' Markdown token
-            return preg_replace(self::$regex_toc_syntax, $toc, $content);
+        if (preg_match(self::$re_toc_syntax, $content) === 1) {
+            // Insert at first 'toc' Markdown token
+            return preg_replace(self::$re_toc_syntax, $toc, $content, 1);
         }
 
         // Insert after main heading
-        return preg_replace('/^# [^\n]+\n+/', $toc, $content);
+        return preg_replace('/^(# [^\n]+)\n+/', '\\1' . $toc, $content, 1);
     }
 
     /**
@@ -431,7 +419,8 @@ class PhpMarkdownCompiler
      */
     private static function generateTableOfContents(string $content): string
     {
-        if (!preg_match_all('/^(?<hs>#+ [^\n]+)\n?/im', $content, $findHeadings)) {
+        $numHeadings = preg_match_all('/^(?<hs>#+ [^\n]+)\n?/im', $content, $findHeadings);
+        if (!$numHeadings || $numHeadings < 1) {
             return ''; // no headings found
         }
 
@@ -444,7 +433,10 @@ class PhpMarkdownCompiler
                 continue; // skip the first heading
             }
 
-            preg_match(self::$regex_heading, trim($heading), $match);
+            $haveHeading = preg_match(self::$re_heading, trim($heading), $match);
+            if ($haveHeading !== 1) {
+                continue; // skip if heading format doesn't match
+            }
 
             $level = intval(strlen($match['level'])); // heading level
             $htext = trim($match['text']); // heading text
