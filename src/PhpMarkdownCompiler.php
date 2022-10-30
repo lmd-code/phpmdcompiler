@@ -5,7 +5,7 @@
  * (c) LMD, 2022
  * https://github.com/lmd-code/phpmdcompiler
  *
- * @version 0.0.4
+ * @version 1.0.0
  * @license MIT
  */
 
@@ -21,7 +21,7 @@ class PhpMarkdownCompiler
     /**
      * Version number
      */
-    public const VERSION = '0.0.4';
+    public const VERSION = '1.0.0';
 
     /**
      * Absolute path to source input folder
