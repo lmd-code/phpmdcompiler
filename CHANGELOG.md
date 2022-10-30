@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced Table of Contents Markdown syntax with [[_TOC_]] (from Gitlab Flavoured Markdown)
+
 ## [0.0.4] - 2022-10-30
 
 ### Fixed

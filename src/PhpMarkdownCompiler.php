@@ -95,7 +95,7 @@ class PhpMarkdownCompiler
      * Regex to match Table of Contents Markdown token syntax
      * @var string
      */
-    private static $re_toc_syntax = '/\n+```toc(\s*?)```\n+/is';
+    private static $re_toc_syntax = '/\n+\[\[_TOC_\]\]\n+/is';
 
     /**
      * Regex to match the parts of a heading (level, text and optional ID)
@@ -332,7 +332,7 @@ class PhpMarkdownCompiler
         }
 
         // Replace @INC spacing tokens
-        $src = preg_replace('/\n+@INC\n+/', "\n\n", $src);
+        $src = preg_replace('/\n+@INC\n*/', "\n\n", $src);
 
         return trim($src);
     }
