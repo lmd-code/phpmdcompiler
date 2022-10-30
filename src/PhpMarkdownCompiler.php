@@ -5,7 +5,7 @@
  * (c) LMD, 2022
  * https://github.com/lmd-code/phpmdcompiler
  *
- * @version 0.0.3
+ * @version 0.0.4
  * @license MIT
  */
 
@@ -21,7 +21,7 @@ class PhpMarkdownCompiler
     /**
      * Version number
      */
-    public const VERSION = '0.0.3';
+    public const VERSION = '0.0.4';
 
     /**
      * Absolute path to source input folder
@@ -66,16 +66,17 @@ class PhpMarkdownCompiler
     private $insertToc = false;
 
     /**
+     * Compiled output Markdown
+     *
+     * @var string
+     */
+    private $mdOut;
+
+    /**
      * Table of Contents Markdown
      * @var string
      */
     private $mdToc;
-
-    /**
-     * Compiler has been run
-     * @var boolean
-     */
-    private $isCompiled = false;
 
     /**
      * Path to compiler root/base/install directory
@@ -227,7 +228,7 @@ class PhpMarkdownCompiler
      */
     public function saveFile(): bool
     {
-        if (!$this->isCompiled) {
+        if ($this->mdOut === null) {
             throw new \Exception("Can not save output file before input has been compiled.");
         }
 
@@ -269,7 +270,7 @@ class PhpMarkdownCompiler
         // Remove any remaining 'toc' Markdown tokens
         $compiledOutput = preg_replace(self::$re_toc_syntax, "\n\n", $compiledOutput);
 
-        $this->isCompiled = true; // flag as compiled
+        $this->mdOut = $compiledOutput; // make available to saveFile()
 
         // Return without Table of Contents inserted
         return $compiledOutput;
