@@ -11,14 +11,11 @@ Optionally include a Table of Contents generated from the headers in the compile
     - [Table of Contents](#table-of-contents)
 - [Running the Compiler from the Command Line](#running-the-compiler-from-the-command-line)
     - [Compiler Options](#compiler-options)
-        - [Path to input file&hellip;](#path-to-input-file)
-        - [Path to output file&hellip;](#path-to-output-file)
-        - [Adjust headings? \[Y/N\]](#adjust-headings-yn)
-        - [Insert Table of Contents? \[Y/N\]](#insert-table-of-contents-yn)
-        - [Show output in console? \[Y/N\]](#show-output-in-console-yn)
-        - [Save/create output file? \[Y/N\]](#savecreate-output-file-yn)
     - [Run the Demo](#run-the-demo)
 - [Running the Compiler from a Server-side Script](#running-the-compiler-from-a-server-side-script)
+- [Class Reference](#class-reference)
+    - [Methods](#methods)
+    - [Basic Example](#basic-example)
 
 ## Markdown Syntax
 
@@ -131,8 +128,103 @@ SAVE/CREATE OUTPUT FILE? [Y/N]  > Y
 
 ## Running the Compiler from a Server-side Script
 
-If you would prefer to run the compiler from a web-accesible server-side script, then please view the example code in `demo/example.phps` and review the class documentation below.
+If you would prefer to run the compiler from a web-accesible server-side script, then please view the example code in `demo/example.phps` and review the class reference below.
 
-----
+## Class Reference
+
+### Methods
+
+#### `new PhpMarkdownCompiler($input = '', $output = '')`
+
+Constructor method
+
+Setting the input/output files here is optional. For example, the CLI app uses the [`setInputFile()`](#setinputfileinput)/[`setOutputFile()`](#setoutputfileoutput) methods instead.
+
+|Parameter|Type|Description|
+|---|---|---|
+|`$input`|String|Absolute path to input source file. *Optional*|
+|`$output`|String|Absolute path to compiled output file. *Optional*|
+
+**Throws:** *Exception*
+
+#### `runCompiler($adjustHeadings = false, $insertToc = false)`
+
+Run the Markdown compiler and return compiled output.
+
+Optionally adjust headings and/or insert a Table of Contents.
+
+|Parameter|Type|Default|Description|
+|---|---|---|---|
+|`$adjustHeadings`|Boolean|`false`|Adjust headings down by one level after the main heading.  E.g. `#` => `###`|
+|`$insertToc`|Boolean|`false`|Insert Table of Contents|
+
+**Returns:** *String* - compiled output Markdown.
+
+#### `saveFile()`
+
+Save compiled output to file.
+
+**Throws:** *Exception*
+
+**Returns:** *Boolean*
+
+#### `getTableOfContents()`
+
+Get the Table of Contents.
+
+This is available regardless of whether the Table of Contents was inserted into the compiled document.
+
+**Returns** *String* - Table of Contents Markdown.
+
+#### `setInputFile($input)`
+
+Validate/normalise and set the source input file location.
+
+Used in the CLI app.
+
+|Parameter|Type|Description|
+|---|---|---|
+|`$input`|String|Absolute path to input source file|
+
+**Throws:** *Exception*
+
+**Returns:** *String* - sanitised input path.
+
+#### `setOutputFile($output)`
+
+Validate/normalise and set the compiled output file location.
+
+Used in the CLI app.
+
+|Parameter|Type|Description|
+|---|---|---|
+|`$output`|String|Absolute path to compiled output file|
+
+**Throws:** *Exception*
+
+**Returns:** *String* - sanitised output path.
+
+### Basic Example
+
+```php
+try {
+    // Initialise the class
+    $mdcompiler = new \lmdcode\phpmdcompiler\PhpMarkdownCompiler(
+        '/path/to/input.md',
+        '/path/to/output.md',
+    );
+
+    // Get compiled contents (adjust headings and insert Table of Contents)
+    $contents = $mdcompiler->runCompiler(true, true);
+
+    // Save the result to file
+    $mdcompiler->saveFile();
+} catch (\Exception $e) {
+    echo "Error: " . $e->getMessage();
+    exit;
+}
+```
+
+---
 
 This README was compiled using PHP Markdown Compiler.

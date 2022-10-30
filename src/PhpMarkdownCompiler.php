@@ -287,7 +287,7 @@ class PhpMarkdownCompiler
                 $compiledOutput
             );
         }
-        
+
         $this->mdOut = $compiledOutput; // make available to saveFile()
 
         return $compiledOutput;
