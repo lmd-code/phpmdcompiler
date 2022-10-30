@@ -113,7 +113,7 @@ if ($compile) {
 <p>Note: this will not parse the Markdown, it will display the raw syntax.</p>
 
 <?php if ($compile) : ?>
-<pre><code title="markdown"><?php echo htmlspecialchars($contents); ?></code></pre>
+<pre><code title="markdown"><?php echo htmlspecialchars($contents, ENT_HTML5); ?></code></pre>
 
 <p><button type="submit" name="save" value="1">Save/Create File</button></p>
 <?php endif; ?>
