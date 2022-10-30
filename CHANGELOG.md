@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- Tweaked regular expressions for token matching/replacing.
+- Fixed/simplified vertical whitespace issues.
+- Issue with fenced code blocks: their formatting is now untouched, and they no longer interfere with compiling the document or parsing headings.
+
 ### Changed
 
 - Replaced Table of Contents Markdown syntax with [[_TOC_]] (from Gitlab Flavoured Markdown)
