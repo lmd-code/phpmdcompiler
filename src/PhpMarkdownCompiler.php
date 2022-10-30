@@ -490,7 +490,8 @@ class PhpMarkdownCompiler
      */
     private static function generateHeadingId($heading): string
     {
-        return str_replace(' ', '-', preg_replace('/[^-a-z0-9 ]/', '', strtolower($heading)));
+        $heading = html_entity_decode($heading, ENT_QUOTES, 'UTF-8');
+        return str_replace(' ', '-', preg_replace('/[^-a-z0-9_ ]/', '', strtolower($heading)));
     }
 
     /**
