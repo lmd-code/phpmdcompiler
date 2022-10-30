@@ -1,4 +1,4 @@
-# PHP Markdown Compiler {#php-markdown-compiler}
+# PHP Markdown Compiler
 
 Compile multiple Markdown (`*.md`) files into a single document using a special *file include* Markdown syntax.
 
@@ -20,9 +20,9 @@ Optionally include a Table of Contents generated from the headers in the compile
     - [Run the Demo](#run-the-demo)
 - [Running the Compiler from a Server-side Script](#running-the-compiler-from-a-server-side-script)
 
-## Markdown Syntax {#markdown-syntax}
+## Markdown Syntax
 
-### File Includes {#file-includes}
+### File Includes
 
 The Markdown syntax for including a file is the same as creating a link, but with a colon (`:`) prefixed.
 
@@ -42,7 +42,7 @@ Some text..
 More text
 ```
 
-### Table of Contents {#table-of-contents}
+### Table of Contents
 
 There are two ways to include a table of contents.
 
@@ -62,7 +62,7 @@ The Table of Contents Markdown syntax is borrowed from Gitlab Flavoured Markdown
 The rest of the document…
 ````
 
-## Running the Compiler from the Command Line {#running-the-compiler-from-the-command-line}
+## Running the Compiler from the Command Line
 
 You need to have at least PHP 7.4 installed on your system.
 
@@ -70,15 +70,15 @@ You need to have at least PHP 7.4 installed on your system.
 2. In the command line tool of you choice, navigate to the folder you just downloaded/unzipped.
 3. At the command prompt, enter `php bin/mdcompile` and follow the instructions on screen.
 
-### Compiler Options {#compiler-options}
+### Compiler Options
 
-#### Path to input file&hellip; {#path-to-input-filehellip}
+#### Path to input file&hellip;
 
 Enter the absolute path to the location of the source input file, including the '`.md`' file extension.
 
 Example: `/home/user/projects/foo/src/index.md`
 
-#### Path to output file&hellip; {#path-to-output-filehellip}
+#### Path to output file&hellip;
 
 Enter the absolute path to the location of the compiled output file, including the '`.md`' file extension.
 
@@ -86,7 +86,7 @@ Example: `/home/user/projects/foo/out/compiled.md`
 
 The output directory must exist, but the output file itself will be created if necessary.
 
-#### Adjust headings? \[Y/N\] {#adjust-headings-yn}
+#### Adjust headings? \[Y/N\]
 
 Enter '`Y`' to adjust headings in included files *down* (in importance) by one level. For example, level 1 (`#`) becomes level 2 (`##`) and so on.
 
@@ -98,21 +98,21 @@ Enter '`Y`' to adjust headings in included files *down* (in importance) by one l
 >
 > **Important:** this is only effective if all Markdown files are valid and follow a logical heading structure.
 
-#### Insert Table of Contents? \[Y/N\] {#insert-table-of-contents-yn}
+#### Insert Table of Contents? \[Y/N\]
 
 Enter '`Y`' to generate and insert a Table of Contents (see [Table of Contents](#table-of-contents) Markdown syntax for more information).
 
-#### Show output in console? \[Y/N\] {#show-output-in-console-yn}
+#### Show output in console? \[Y/N\]
 
 Enter '`Y`' to to review the generated output before committing it to file.
 
 Enter '`N`' to skip directly to saving/creating the output file.
 
-#### Save/create output file? \[Y/N\] {#savecreate-output-file-yn}
+#### Save/create output file? \[Y/N\]
 
 Enter '`Y`' to save (or create) the output file. **Note:** only shown if you entered '`Y`' to viewing output in the console.
 
-### Run the Demo {#run-the-demo}
+### Run the Demo
 
 To run the demo, follow the steps above and then at each prompt enter:
 
@@ -129,7 +129,7 @@ SHOW OUTPUT IN CONSOLE? [Y/N]   > Y
 SAVE/CREATE OUTPUT FILE? [Y/N]  > Y
 ```
 
-## Running the Compiler from a Server-side Script {#running-the-compiler-from-a-server-side-script}
+## Running the Compiler from a Server-side Script
 
 If you would prefer to run the compiler from a web-accesible server-side script, then please view the example code in `demo/example.phps` and review the class documentation below.
 
