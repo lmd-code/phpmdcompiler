@@ -6,13 +6,29 @@ Optionally include a Table of Contents generated from the headers in the compile
 
 **NB:** This is not a *parser*, it will not convert Markdown content into another markup syntax.
 
+- [Markdown Syntax](#markdown-syntax)
+    - [File Includes](#file-includes)
+    - [Table of Contents](#table-of-contents)
+- [Running the Compiler from the Command Line](#running-the-compiler-from-the-command-line)
+    - [Compiler Options](#compiler-options)
+        - [Path to input file&hellip;](#path-to-input-file)
+        - [Path to output file&hellip;](#path-to-output-file)
+        - [Adjust headings? \[Y/N\]](#adjust-headings-yn)
+        - [Insert Table of Contents? \[Y/N\]](#insert-table-of-contents-yn)
+        - [Show output in console? \[Y/N\]](#show-output-in-console-yn)
+        - [Save/create output file? \[Y/N\]](#savecreate-output-file-yn)
+    - [Run the Demo](#run-the-demo)
+- [Running the Compiler from a Server-side Script](#running-the-compiler-from-a-server-side-script)
+
 ## Markdown Syntax
 
 ### File Includes
 
 The Markdown syntax for including a file is the same as creating a link, but with a colon (`:`) prefixed.
 
-However, unlike links, each include must appear on a new line and be the only item on that line.
+However, unlike links, each include must appear on a new line, be the only item on that line, and have a blank line before and after it.
+
+The link title can contain any text you like, for example a useful hint to the include file's contents (e.g. it's main title, or a version of it).
 
 ```markdown
 # Document Title
@@ -32,15 +48,16 @@ There are two ways to include a table of contents.
 
 The first, and easiest, is to just let the compiler insert it after the main heading.
 
-If you would prefer to have some control over its placement, the Markdown syntax is an empty `code` block with "`toc`" set as its "language".
+If you would prefer to have some control over its placement, use the Markdown syntax token `[[_TOC_]]` (case-insensitive). The token must appear on a new line, be the only item on that line, and have a blank line before and after it.
 
 ````markdown
 # Document Title
 
 Some intro text…
 
-```toc
-```
+The Table of Contents Markdown syntax is borrowed from Gitlab Flavoured Markdown.
+
+[[_TOC_]]
 
 The rest of the document…
 ````
@@ -73,7 +90,13 @@ The output directory must exist, but the output file itself will be created if n
 
 Enter '`Y`' to adjust headings in included files *down* (in importance) by one level. For example, level 1 (`#`) becomes level 2 (`##`) and so on.
 
-> Valid Markdown documents should only have a single level 1 (`#`) heading. If included files all contain a level 1 heading (to be valid individually), then the combined Markdown document would become invalid. Adjusting the heading levels of included files fixes this issue. **Important:** this is only effective if all Markdown files are valid and follow a logical heading structure.
+> Valid Markdown documents should only have a single level 1 (`#`) heading.
+>
+> If each included file contains a level 1 heading (to be valid individually), then the combined Markdown document would become invalid.
+>
+> Adjusting the heading levels of included files fixes this issue.
+>
+> **Important:** this is only effective if all Markdown files are valid and follow a logical heading structure.
 
 #### Insert Table of Contents? \[Y/N\]
 
@@ -109,3 +132,7 @@ SAVE/CREATE OUTPUT FILE? [Y/N]  > Y
 ## Running the Compiler from a Server-side Script
 
 If you would prefer to run the compiler from a web-accesible server-side script, then please view the example code in `demo/example.phps` and review the class documentation below.
+
+----
+
+This README was compiled using PHP Markdown Compiler.

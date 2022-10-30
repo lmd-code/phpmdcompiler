@@ -1,7 +1,6 @@
 # Demo
 
-```toc
-```
+[[_TOC_]]
 
 :[Page One](One.md)
 

@@ -54,6 +54,12 @@ class PhpMarkdownCompiler
     private $openFiles = [];
 
     /**
+     * Markdown fenced code blocks
+     * @var array[]
+     */
+    private $codeBlocks = [];
+
+    /**
      * Adjust heading levels
      * @var boolean
      */
@@ -89,13 +95,13 @@ class PhpMarkdownCompiler
      * Regex to match file include syntax
      * @var string
      */
-    private static $re_inc_syntax = '/^(?<inc>:\[(?<text>[^\]]+?)\]\((?<file>[^\) ]+?)\)\h*?)$/ms';
+    private static $re_inc_syntax = '/^(?<inc>:\[(?<text>[^\]]+?)\]\((?<file>[^\) ]+?)\))\h*?$/im';
 
     /**
      * Regex to match Table of Contents Markdown token syntax
      * @var string
      */
-    private static $re_toc_syntax = '/\n+```toc(\s*?)```\n+/is';
+    private static $re_toc_syntax = '/^\[\[_TOC_\]\]\h*?$/im';
 
     /**
      * Regex to match the parts of a heading (level, text and optional ID)
@@ -267,12 +273,23 @@ class PhpMarkdownCompiler
             $compiledOutput = $this->insertTableOfContents($compiledOutput);
         }
 
-        // Remove any remaining 'toc' Markdown tokens
-        $compiledOutput = preg_replace(self::$re_toc_syntax, "\n\n", $compiledOutput);
+        // Remove any remaining Table of Contents Markdown tokens
+        $compiledOutput = preg_replace(self::$re_toc_syntax, "", $compiledOutput);
 
+        // Remove excess vertical whitespace (3 or more newlines converted to 2 newlines)
+        $compiledOutput = preg_replace('/\n{3,}/', "\n\n", $compiledOutput);
+
+        // Reinsert all fenced code blocks (formatting inside codeblocks should remain untouched)
+        foreach ($this->codeBlocks as $codeblock) {
+            $compiledOutput = str_replace(
+                '<!--CODEBLOCK:' . $codeblock['id'] . '-->',
+                $codeblock['code'],
+                $compiledOutput
+            );
+        }
+        
         $this->mdOut = $compiledOutput; // make available to saveFile()
 
-        // Return without Table of Contents inserted
         return $compiledOutput;
     }
 
@@ -296,6 +313,20 @@ class PhpMarkdownCompiler
         // Normalise tabs
         $src = preg_replace("/\t/s", "    ", $src);
 
+        // Temporarily remove fenced code blocks (replace with token). We do not want their
+        // contents to interfere with compiling the document or parsing headings.
+        $haveBlocks = preg_match_all('/\n(?<cb>(`{3,4}).+?\2)\n/si', $src, $blocks, PREG_SET_ORDER);
+        if ($haveBlocks !== false && $haveBlocks > 0) {
+            for ($i = 0; $i < count($blocks); $i++) {
+                $this->codeBlocks[] = ['id' => $srcFile . '_' . $i, 'code' => $blocks[$i]['cb']];
+                $src = preg_replace(
+                    '/' . preg_quote($blocks[$i]['cb'], '/') . '/',
+                    "\n\n<!--CODEBLOCK:" . $srcFile . "_" . $i . "-->\n\n",
+                    $src
+                );
+            }
+        }
+
         // Parse headings (levels are never adjusted on the top-level document)
         $src = $this->parseHeadings(
             $src,
@@ -313,11 +344,11 @@ class PhpMarkdownCompiler
 
         foreach ($foundIncs as $inc) {
             $file = trim($inc['file']);
-            $regex_inc = '\n*?' . preg_quote($inc['inc'], '/') . '\n*?';
+            $regex_inc = preg_quote($inc['inc'], '/');
 
             // Only recursively get contents if the file exists and isn't already open
             if (file_exists($this->inputPath . '/' . $file) && !in_array($file, $this->openFiles)) {
-                $content = "\n\n" . $this->compile($file) . "\n@INC\n"; // @INC = spacing token
+                $content = "\n\n" . $this->compile($file) . "\n\n";
                 $src = preg_replace('/' . $regex_inc . '/s', $content, $src, 1);
             } else {
                 // Remove non-existant includes
@@ -330,9 +361,6 @@ class PhpMarkdownCompiler
             unset($this->openFiles[$idx]);
             $this->openFiles = array_values($this->openFiles); // reindex
         }
-
-        // Replace @INC spacing tokens
-        $src = preg_replace('/\n+@INC\n+/', "\n\n", $src);
 
         return trim($src);
     }
@@ -389,8 +417,8 @@ class PhpMarkdownCompiler
     /**
      * Insert Table of Contents in to compiled document
      *
-     * Will either insert where there is a `toc` Markdown token, or if there is no token,
-     * it will insert after the main heading.
+     * Will either insert where there is a Table of Contents Markdown token,
+     * or if there is no token, it will insert after the main heading.
      *
      * Where token exists, it will only insert into the first occurance it finds.
      *
@@ -400,15 +428,13 @@ class PhpMarkdownCompiler
      */
     private function insertTableOfContents(string $content): string
     {
-        $toc = "\n\n" . $this->mdToc . "\n\n";
-
         if (preg_match(self::$re_toc_syntax, $content) === 1) {
-            // Insert at first 'toc' Markdown token
-            return preg_replace(self::$re_toc_syntax, $toc, $content, 1);
+            // Insert at first Markdown token
+            return preg_replace(self::$re_toc_syntax, $this->mdToc, $content, 1);
         }
 
         // Insert after main heading
-        return preg_replace('/^(# [^\n]+)\n+/', '\\1' . $toc, $content, 1);
+        return preg_replace('/^(# [^\n]+)\n+/', '\\1\n\n' . $this->mdToc, $content, 1);
     }
 
     /**
@@ -464,7 +490,8 @@ class PhpMarkdownCompiler
      */
     private static function generateHeadingId($heading): string
     {
-        return str_replace(' ', '-', preg_replace('/[^-a-z0-9 ]/', '', strtolower($heading)));
+        $heading = html_entity_decode($heading, ENT_QUOTES, 'UTF-8');
+        return str_replace(' ', '-', preg_replace('/[^-a-z0-9_ ]/', '', strtolower($heading)));
     }
 
     /**
