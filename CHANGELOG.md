@@ -4,7 +4,7 @@
 
 ### Added
 
-- Added MIT license ([`b17cb1f`](https://github.com/Level/level/commit/b17cb1f)).
+- Added MIT license ([`b17cb1f`](https://github.com/lmd-code/phpmdcompiler/commit/b17cb1f)).
 
 ## [1.0.0] - 2022-10-30
 
