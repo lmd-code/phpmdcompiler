@@ -1,7 +1,10 @@
+.github/
 .vscode/
-dev/
+.dev/
 vendor/
 compiled.md
 demo-compiled.md
 dump.txt
 log.txt
+*.log
+*.tmp

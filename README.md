@@ -1,5 +1,7 @@
 # PHP Markdown Compiler
 
+**Requirement:** Compatible with PHP version 7.4+
+
 Compile multiple Markdown (`*.md`) files into a single document using a special *file include* Markdown syntax.
 
 Optionally include a Table of Contents generated from the headers in the compiled document.

@@ -7,6 +7,8 @@ bin/mdcompile linguist-language=PHP
 .gitignore     export-ignore
 .gitkeep       export-ignore
 *.xml          export-ignore
+*.json         export-ignore
+*.lock         export-ignore
 
 # Exclude from diffs
 .github        linguist-generated
@@ -16,8 +18,12 @@ bin/mdcompile linguist-language=PHP
 demo/*         linguist-generated
 CHANGELOG.md   linguist-generated
 *.xml          linguist-generated
+*.json         linguist-generated
+*.lock         linguist-generated
 
 # Exclude from language stats
 demo/* linguist-vendored
 *.md   linguist-vendored
 *.xml  linguist-vendored
+*.json linguist-vendored
+*.lock linguist-vendored
