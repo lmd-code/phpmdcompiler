@@ -100,7 +100,7 @@ $output = $mdcompiler->runCompiler($doHeadings === 'Y', $doToc === 'Y');
 
 echo "CONTENTS COMPILED..." . $xNL;
 
-// Show output in consle
+// Show output in console
 do {
     echo "SHOW OUTPUT IN CONSOLE? [Y/N]" . $NL;
     $doTest = strtoupper(trim(readline($prompt)));
@@ -119,7 +119,7 @@ if ($doTest === 'Y') {
 
     echo $NL;
 } else {
-    $doWrite = 'Y'; // if not viewing output first, automatially save/create output file
+    $doWrite = 'Y'; // if not viewing output first, automatically save/create output file
 }
 
 if ($doWrite === 'Y') {    

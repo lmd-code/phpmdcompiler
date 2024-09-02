@@ -73,7 +73,7 @@ if ($compile) {
 <h1>PHP Markdown Compiler Demo</h1>
 
 <?php if ($saved) : ?>
-<p class="saved">The compiled output file was sucessfully saved.</p>
+<p class="saved">The compiled output file was successfully saved.</p>
 <?php endif; ?>
 
 <p>Basic server-side script example.</p>

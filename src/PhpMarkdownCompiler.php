@@ -404,7 +404,7 @@ class PhpMarkdownCompiler
                 $level = $level + 1;
             }
 
-            // Replace heading with approprate level and ID/anchor (which can be empty)
+            // Replace heading with appropriate level and ID/anchor (which can be empty)
             $newHeading = str_repeat('#', $level) . ' ' . $htext . $id;
 
             $regex_oldHeading = preg_quote(trim($heading), '/');
@@ -420,7 +420,7 @@ class PhpMarkdownCompiler
      * Will either insert where there is a Table of Contents Markdown token,
      * or if there is no token, it will insert after the main heading.
      *
-     * Where token exists, it will only insert into the first occurance it finds.
+     * Where token exists, it will only insert into the first occurrence it finds.
      *
      * @param string $content Markdown content
      *
