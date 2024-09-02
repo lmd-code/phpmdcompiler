@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.2] - 2024-09-02
+
+### Fix
+
+- Fix typos in code comments, demo files etc.
+
 ## [1.0.1] - 2022-10-30
 
 ### Added
@@ -10,5 +16,6 @@
 
 *First Public Release*
 
+[1.0.2]: https://github.com/lmd-code/phpmdcompiler/releases/tag/v1.0.2
 [1.0.1]: https://github.com/lmd-code/phpmdcompiler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/lmd-code/phpmdcompiler/releases/tag/v1.0.0
