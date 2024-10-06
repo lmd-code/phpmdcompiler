@@ -7,7 +7,6 @@ bin/mdcompile linguist-language=PHP
 .gitignore     export-ignore
 .gitkeep       export-ignore
 *.xml          export-ignore
-*.json         export-ignore
 *.lock         export-ignore
 
 # Exclude from diffs
